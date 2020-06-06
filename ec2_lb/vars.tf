@@ -7,7 +7,7 @@ variable "subnet_zone" {
   default = []
 }
 variable "sg_name" {}
-variable "ingress_rules" {}
+#variable "ingress_rules" {}
 variable "egress_rules" {}
 variable "key_name" {}
 variable "instance_type" {}

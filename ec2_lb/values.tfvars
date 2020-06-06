@@ -5,22 +5,8 @@ vpc_tags = {
   Environment = "Test"
 }
 vpc_address = "10.0.0.0/16"
-subnet_zone = ["us-east-1a", "us-east-1b", "us-east-1c", "us-east-1d"]
-sg_name     = "http_sg"
-ingress_rules = [
-  {
-    from_port   = "80"
-    to_port     = "80"
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  },
-  {
-    from_port   = "22"
-    to_port     = "22"
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-]
+subnet_zone = ["us-east-1a", "us-east-1b", "us-east-1c"]
+sg_name     = "allow_http"
 
 egress_rules = [
   {

@@ -33,15 +33,14 @@ resource "aws_internet_gateway" "gw" {
 resource "aws_security_group" "http_sg" {
   name   = var.sg_name
   vpc_id = aws_vpc.test.id
-  dynamic "ingress" {
-    for_each = var.ingress_rules
-    content {
-      from_port   = ingress.value.from_port
-      to_port     = ingress.value.to_port
-      protocol    = ingress.value.protocol
-      cidr_blocks = ingress.value.cidr_blocks
-    }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
+
   dynamic "egress" {
     for_each = var.egress_rules
     content {
@@ -51,6 +50,15 @@ resource "aws_security_group" "http_sg" {
       cidr_blocks = egress.value.cidr_blocks
     }
   }
+}
+
+resource "aws_security_group_rule" "in-http-rule" {
+  type                     = "ingress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.http_sg.id
+  source_security_group_id = aws_security_group.elb_sg.id
 }
 
 resource "aws_security_group" "elb_sg" {
@@ -65,12 +73,11 @@ resource "aws_security_group" "elb_sg" {
   }
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = -1
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [aws_security_group.http_sg.id]
   }
-
 
 }
 
@@ -84,7 +91,7 @@ resource "aws_instance" "http_server" {
   subnet_id = aws_subnet.test_http[count.index].id
 
   tags = {
-    name : "http_servers_$(subnet_id)"
+    Name : "http_servers_$(subnet_id)"
   }
 
   connection {
