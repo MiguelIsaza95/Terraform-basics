@@ -18,4 +18,4 @@ egress_rules = [
 ]
 key_name      = "linux_key"
 instance_type = "t2.micro"
-aws_key_pair  = "/home/devops/Documents/aws_keys/linux_key.pem"
+aws_key_pair  = "/home/developer/Documents/cloud-ssh-keys/linux_key.pem"

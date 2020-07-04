@@ -66,8 +66,8 @@ resource "aws_security_group" "elb_sg" {
   vpc_id = aws_vpc.test.id
 
   ingress {
-    from_port   = 80
-    to_port     = 80
+    from_port   = 3030
+    to_port     = 3030
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -121,14 +121,14 @@ resource "aws_elb" "elb" {
   listener {
     instance_port     = 80
     instance_protocol = "http"
-    lb_port           = 80
+    lb_port           = 3030
     lb_protocol       = "http"
   }
 }
 
 
-#resource "aws_elb_attachment" "baz" {
-#  count    = length(var.subnet_zone)
-#  elb      = aws_elb.elb.id
-#  instance = element(aws_instance.http_server.*.id, count.index)
-#}
+resource "aws_elb_attachment" "baz" {
+  count    = length(var.subnet_zone)
+  elb      = aws_elb.elb.id
+  instance = element(aws_instance.http_server.*.id, count.index)
+}
